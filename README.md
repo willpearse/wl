@@ -2,6 +2,9 @@ wl: Will's Library of Will
 ==========================
 A note-taking system for those tired of complications
 
+##Licence
+See file ``LICENCE``. GPL v2.
+
 ##Overview 
 If you have any of:
 * folder(s) of PDFs you've read
