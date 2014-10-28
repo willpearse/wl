@@ -37,7 +37,7 @@ if options[:scientist]
   end
   puts "#{results.length} papers found:"
   if options[:open_pdf]
-    IO.popen "evince #{Shellwords.escape(results[options[:open_pdf]+1])}"
+    IO.popen "evince #{Shellwords.escape(results[options[:open_pdf]-1])}"
   end
   results.each do |res|
     res = res.sub(options[:paper_dir], "")
