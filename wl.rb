@@ -31,18 +31,17 @@ if options[:scientist]
   #PDFs
   files = Dir.glob(options[:paper_dir]+"**/*")
   results = []
-  files.each do |file|
-    
+  files.each do |file|    
     if file.downcase.include? options[:scientist].downcase then results.push(file) end
   end
   puts "#{results.length} papers found:"
   if options[:open_pdf]
     IO.popen "evince #{Shellwords.escape(results[options[:open_pdf]-1])}"
   end
-  results.each do |res|
+  results.each_with_index do |res, i|
     res = res.sub(options[:paper_dir], "")
-    if res.length > 65 then res = res[0..65] + "..." end
-    puts "  #{res}"
+    if res.length > 65 then res = res[0..75] + "..." end
+    puts " #{i+1} #{res}"
   end
   
   #Notes
@@ -51,19 +50,19 @@ if options[:scientist]
   File.open options[:paper_notes_file] do |handle|
     handle.each_line do |line|
       if next_time
-        if line.length > 65 then line = line[0..61] + "..." end
+        if line.length > 75 then line = line[0..71] + "..." end
         results.push "    #{line}"
         next_time = false
       else
         if line.downcase.include? options[:scientist]
           if line[0] == "\t"
             results.push header
-            if line.length > 65 then line = line[0..61] + "..." end
+            if line.length > 75 then line = line[0..71] + "..." end
             results.push "    #{line}"
           else
             header = line
             if line.downcase.include? options[:scientist]
-              if line.length > 65 then line = line[0..63] + "..." end
+              if line.length > 75 then line = line[0..73] + "..." end
               results.push "  #{line}"
             end
             next_time = true
@@ -101,7 +100,7 @@ if options[:notes]
         handle.each_line do |line|
           if line.downcase.include? options[:notes].downcase
             results.push(file)
-            if line.length > 65 then line = res[0..61] + "..." end
+            if line.length > 75 then line = res[0..71] + "..." end
             results.push("  "+line)
             extras += 1
             break
@@ -113,7 +112,7 @@ if options[:notes]
   puts "#{results.length - extras} notes found:"
   results.each do |res|
     res = res.sub(options[:paper_dir], "")
-    if res.length > 65 then res = res[0..65] + "..." end
+    if res.length > 75 then res = res[0..75] + "..." end
     puts "  #{res}"
   end
 end
