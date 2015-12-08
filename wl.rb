@@ -1,12 +1,12 @@
 #!/usr/bin/ruby
 require 'optparse'
 require 'shellwords'
+require 'open3'
 
 options = {}
 OptionParser.new do |opts|
   #Defaults
   options[:paper_notes_file] = "/home/will/Papers/notes.txt"
-  options[:email_file] = "/home/will/.thunderbird/5bp3a75o.default/history.mab"
   options[:paper_dir] = "/home/will/Papers/"
   options[:notes_dir]   = "/home/will/Notes/"
   options[:thorough] = false
@@ -26,6 +26,15 @@ OptionParser.new do |opts|
   opts.on("-")
 end.parse!
 
+#Handle defaults (...somewhat hackily as an add-on...)
+ARGV.reverse!
+scientist = ARGV.pop
+if scientist
+  options[:scientist] = scientist
+  open_pdf = ARGV.pop
+  if open_pdf then options[:open_pdf] = open_pdf.to_i end
+end
+
 #Search for papers
 if options[:scientist]
   #PDFs
@@ -36,7 +45,7 @@ if options[:scientist]
   end
   puts "#{results.length} papers found:"
   if options[:open_pdf]
-    IO.popen "evince #{Shellwords.escape(results[options[:open_pdf]-1])}"
+    Open3.capture2e "evince #{Shellwords.escape(results[options[:open_pdf]-1])}"
   end
   results.each_with_index do |res, i|
     res = res.sub(options[:paper_dir], "")
